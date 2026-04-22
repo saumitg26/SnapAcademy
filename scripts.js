@@ -1,446 +1,465 @@
-/* ============================================================
-   WORLDWIDE WONDERS — style.css
-   Clean rewrite matched to index.html + scripts.js class names
-   Fonts: Unbounded · Source Serif 4 · IBM Plex Mono
-   ============================================================ */
+/**
+ * Data Catalog Project - Worldwide Wonders
+ * SEA Stage 2
+ *
+ * Data structure: wonderCatalog is an array of objects.
+ * Each object represents one wonder with consistent properties.
+ *
+ * Features:
+ *   1. Era Filter   — filters array using comparison operators on yearBuilt
+ *   2. Sort         — reorders array using .sort() with a comparator function
+ *   3. Search       — filters array using .filter() + .includes() across multiple fields
+ *   4. UNESCO Toggle — filters array to only isUNESCO === true entries
+ */
 
-:root {
-  --bg:        #0f0e0c;
-  --surface:   #1c1a16;
-  --card-bg:   #242018;
-  --border:    #3a3426;
-  --gold:      #d4a843;
-  --gold-dim:  #7a5e1e;
-  --text:      #e8dfc8;
-  --text-muted:#8a7d65;
-  --text-dim:  #5a5040;
-  --red:       #c0482a;
-  --teal:      #2a8a78;
-  --blue:      #2a5a8a;
-  --green:     #4a7a2a;
+// ============================================================
+// DATA — Array of objects. Negative yearBuilt = BCE. 0 = Natural/timeless.
+// ============================================================
+
+const wonderCatalog = [
+  {
+    name: "Great Pyramid of Giza",
+    location: "Egypt",
+    continent: "Africa",
+    type: "Man-made",
+    yearBuilt: -2560,
+    visitorCount: 14700000,
+    isUNESCO: true,
+    description: "The oldest and largest of the three Giza pyramids, built as a tomb for Pharaoh Khufu. The only surviving original Wonder of the Ancient World.",
+    quickFact: "Built with roughly 2.3 million stone blocks, each averaging 2.5 to 15 tonnes.",
+    emoji: "🔺"
+  },
+  {
+    name: "Petra",
+    location: "Jordan",
+    continent: "Asia",
+    type: "Ruins",
+    yearBuilt: -312,
+    visitorCount: 1100000,
+    isUNESCO: true,
+    description: "Known as the Rose City, Petra was carved directly into vibrant red sandstone cliffs by the Nabataean civilization.",
+    quickFact: "Only 15% of the ancient city has been excavated — 85% still lies underground.",
+    emoji: "🏛️"
+  },
+  {
+    name: "Great Barrier Reef",
+    location: "Australia",
+    continent: "Oceania",
+    type: "Natural",
+    yearBuilt: 0,
+    visitorCount: 2000000,
+    isUNESCO: true,
+    description: "The world's largest coral reef system, stretching over 2,300 km and home to thousands of marine species.",
+    quickFact: "Visible from outer space — the only living thing that can be seen from the Moon.",
+    emoji: "🐠"
+  },
+  {
+    name: "Machu Picchu",
+    location: "Peru",
+    continent: "South America",
+    type: "Ruins",
+    yearBuilt: 1450,
+    visitorCount: 1500000,
+    isUNESCO: true,
+    description: "An Incan citadel perched 2,430 metres above sea level in the Andes, built during the height of the Inca Empire.",
+    quickFact: "Stones fit so perfectly a credit card cannot slide between them — built with no mortar.",
+    emoji: "🏔️"
+  },
+  {
+    name: "Colosseum",
+    location: "Italy",
+    continent: "Europe",
+    type: "Ruins",
+    yearBuilt: 70,
+    visitorCount: 7700000,
+    isUNESCO: true,
+    description: "Rome's iconic amphitheatre could hold up to 80,000 spectators for gladiatorial contests and public spectacles.",
+    quickFact: "It had a retractable canvas awning called the velarium to shade spectators from the sun.",
+    emoji: "🏟️"
+  },
+  {
+    name: "Angkor Wat",
+    location: "Cambodia",
+    continent: "Asia",
+    type: "Man-made",
+    yearBuilt: 1113,
+    visitorCount: 2600000,
+    isUNESCO: true,
+    description: "The largest religious monument ever constructed, originally built as a Hindu temple before converting to Buddhism.",
+    quickFact: "Its bas-reliefs stretch nearly half a kilometre — the longest continuous bas-relief in the world.",
+    emoji: "⛩️"
+  },
+  {
+    name: "Taj Mahal",
+    location: "India",
+    continent: "Asia",
+    type: "Man-made",
+    yearBuilt: 1632,
+    visitorCount: 8000000,
+    isUNESCO: true,
+    description: "A masterpiece of Mughal architecture, built by Emperor Shah Jahan as a mausoleum for his beloved wife Mumtaz Mahal.",
+    quickFact: "The Taj Mahal appears to change color through the day — pinkish at dawn, white at noon, golden at sunset.",
+    emoji: "🕌"
+  },
+  {
+    name: "Victoria Falls",
+    location: "Zambia / Zimbabwe",
+    continent: "Africa",
+    type: "Natural",
+    yearBuilt: 0,
+    visitorCount: 1500000,
+    isUNESCO: true,
+    description: "The largest curtain of falling water on Earth — over 1.7 km wide and 108 m tall. Known locally as The Smoke That Thunders.",
+    quickFact: "The spray rises up to 400 m into the air and can be seen from 50 km away.",
+    emoji: "💧"
+  },
+  {
+    name: "Chichen Itza",
+    location: "Mexico",
+    continent: "North America",
+    type: "Ruins",
+    yearBuilt: 514,
+    visitorCount: 2700000,
+    isUNESCO: true,
+    description: "A pre-Columbian Mayan city featuring the famous El Castillo pyramid, an astronomical calendar carved in stone.",
+    quickFact: "On spring and autumn equinoxes, sunlight creates a shadow serpent slithering down the pyramid steps.",
+    emoji: "🌞"
+  },
+  {
+    name: "Great Wall of China",
+    location: "China",
+    continent: "Asia",
+    type: "Man-made",
+    yearBuilt: -221,
+    visitorCount: 10000000,
+    isUNESCO: true,
+    description: "A series of fortifications stretching over 21,000 km, built across centuries to protect Chinese states from invasion.",
+    quickFact: "Sticky rice flour was used as mortar in some sections — and it proved incredibly durable.",
+    emoji: "🏯"
+  },
+  {
+    name: "Stonehenge",
+    location: "England",
+    continent: "Europe",
+    type: "Man-made",
+    yearBuilt: -3000,
+    visitorCount: 1500000,
+    isUNESCO: true,
+    description: "A prehistoric ring of standing stones on Salisbury Plain, precisely aligned with the solstices.",
+    quickFact: "The bluestones were transported from Wales, nearly 250 km away — no one is sure exactly how.",
+    emoji: "🗿"
+  },
+  {
+    name: "Göbekli Tepe",
+    location: "Turkey",
+    continent: "Asia",
+    type: "Ruins",
+    yearBuilt: -9600,
+    visitorCount: 500000,
+    isUNESCO: true,
+    description: "The world's oldest known temple complex, predating Stonehenge by 6,000 years and built by hunter-gatherers.",
+    quickFact: "Its discovery completely rewrote our understanding of when humans first organized into complex societies.",
+    emoji: "🏺"
+  },
+  {
+    name: "Hagia Sophia",
+    location: "Turkey",
+    continent: "Asia",
+    type: "Man-made",
+    yearBuilt: 537,
+    visitorCount: 3700000,
+    isUNESCO: true,
+    description: "A stunning feat of Byzantine engineering in Istanbul, serving as a cathedral, mosque, museum, and mosque again.",
+    quickFact: "Its massive dome appears to float — supported by pendentives, a major engineering breakthrough of its era.",
+    emoji: "🕍"
+  },
+  {
+    name: "Pamukkale",
+    location: "Turkey",
+    continent: "Asia",
+    type: "Natural",
+    yearBuilt: 0,
+    visitorCount: 2000000,
+    isUNESCO: true,
+    description: "Dazzling white calcium terraces and thermal pools cascading down a hillside, used as a spa since antiquity.",
+    quickFact: "The ancient city of Hierapolis sits at the top — its hot springs were believed to have healing powers.",
+    emoji: "🌊"
+  },
+  {
+    name: "Alhambra",
+    location: "Spain",
+    continent: "Europe",
+    type: "Man-made",
+    yearBuilt: 1238,
+    visitorCount: 3000000,
+    isUNESCO: true,
+    description: "A breathtaking Moorish palace and fortress complex in Granada, showcasing the pinnacle of Islamic architecture in Europe.",
+    quickFact: "Its name comes from Arabic meaning The Red One, after the reddish hue of its walls at dusk.",
+    emoji: "🏰"
+  },
+  {
+    name: "Mount Everest",
+    location: "Nepal / Tibet",
+    continent: "Asia",
+    type: "Natural",
+    yearBuilt: 0,
+    visitorCount: 500000,
+    isUNESCO: false,
+    description: "Earth's highest mountain at 8,849 m, standing on the border of Nepal and Tibet in the Himalayas.",
+    quickFact: "Everest grows about 4 mm taller every year due to tectonic uplift from the Indian subcontinent.",
+    emoji: "⛰️"
+  },
+  {
+    name: "Amazon Rainforest",
+    location: "Brazil & 8 countries",
+    continent: "South America",
+    type: "Natural",
+    yearBuilt: 0,
+    visitorCount: 3000000,
+    isUNESCO: false,
+    description: "The world's largest tropical rainforest, covering over 5.5 million km² and home to 10% of all species on Earth.",
+    quickFact: "The Amazon influences rainfall patterns as far away as the central United States.",
+    emoji: "🌿"
+  },
+  {
+    name: "Easter Island Moai",
+    location: "Chile",
+    continent: "Oceania",
+    type: "Man-made",
+    yearBuilt: 1250,
+    visitorCount: 100000,
+    isUNESCO: true,
+    description: "Nearly 1,000 monolithic statues carved by the Rapa Nui people, standing on a remote Pacific island.",
+    quickFact: "The largest moai stands nearly 10 m tall and weighs 82 tonnes — and was never successfully transported.",
+    emoji: "🗽"
+  },
+  {
+    name: "Northern Lights",
+    location: "Arctic Circle",
+    continent: "Europe",
+    type: "Natural",
+    yearBuilt: 0,
+    visitorCount: 2500000,
+    isUNESCO: false,
+    description: "A natural light display caused by solar particles interacting with Earth's atmosphere, best seen in polar regions.",
+    quickFact: "The same phenomenon in the Southern Hemisphere is called Aurora Australis.",
+    emoji: "🌌"
+  },
+  {
+    name: "Waitomo Glowworm Caves",
+    location: "New Zealand",
+    continent: "Oceania",
+    type: "Natural",
+    yearBuilt: 0,
+    visitorCount: 500000,
+    isUNESCO: false,
+    description: "Limestone caves lit by thousands of bioluminescent glowworms, creating a living galaxy underground.",
+    quickFact: "These glowworms are found only in New Zealand — they use their glow to lure prey into sticky threads.",
+    emoji: "✨"
+  }
+];
+
+// ============================================================
+// STATE — tracks active filters/sort
+// ============================================================
+
+let currentEra     = "all";
+let currentSort    = "name";
+let currentSearch  = "";
+let unescoOnly     = false;
+
+// ============================================================
+// HELPER FUNCTIONS
+// ============================================================
+
+// Returns the era category for a wonder based on yearBuilt
+function getEra(yearBuilt) {
+  if (yearBuilt === 0)   return "natural";
+  if (yearBuilt < 1000)  return "ancient";   // negatives (BCE) are always < 1000
+  if (yearBuilt < 1800)  return "medieval";
+  return "modern";
 }
 
-/* ── Reset ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Source Serif 4', Georgia, serif;
-  font-size: 16px;
-  line-height: 1.6;
-  min-height: 100vh;
+// Converts a raw yearBuilt number into a readable label
+function formatYear(yearBuilt) {
+  if (yearBuilt === 0)  return "Timeless";
+  if (yearBuilt < 0)    return Math.abs(yearBuilt) + " BCE";
+  return yearBuilt + " AD";
 }
 
-/* ════════════════════════════════════════
-   HEADER
-════════════════════════════════════════ */
-header {
-  background: var(--surface);
-  border-bottom: 2px solid var(--border);
-  padding: 3rem 2rem 2.5rem;
-  text-align: center;
+// Shortens large visitor numbers (e.g. 1500000 → "1.5M")
+function formatVisitors(n) {
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + "M";
+  if (n >= 1000)    return Math.round(n / 1000) + "K";
+  return n.toString();
 }
 
-.header-eyebrow {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 1.2rem;
-  opacity: 0.8;
+// ============================================================
+// FEATURE 1 — ERA FILTER
+// Uses .filter() and comparison operators on yearBuilt
+// ============================================================
+
+function filterByEra(data) {
+  if (currentEra === "all") return data;
+  return data.filter(function(wonder) {
+    return getEra(wonder.yearBuilt) === currentEra;
+  });
 }
 
-header h1 {
-  font-family: 'Unbounded', sans-serif;
-  font-size: clamp(2.2rem, 6vw, 4.8rem);
-  font-weight: 900;
-  line-height: 1.05;
-  color: var(--text);
-  letter-spacing: -0.02em;
-  margin-bottom: 0.8rem;
+// ============================================================
+// FEATURE 2 — SORT
+// Uses .sort() with a comparator function
+// ============================================================
+
+function sortWonders(data) {
+  var sorted = data.slice(); // copy so original array stays untouched
+
+  if (currentSort === "name") {
+    sorted.sort(function(a, b) {
+      return a.name.localeCompare(b.name);
+    });
+  } else if (currentSort === "visitors") {
+    sorted.sort(function(a, b) {
+      return b.visitorCount - a.visitorCount; // descending: highest first
+    });
+  } else if (currentSort === "oldest") {
+    sorted.sort(function(a, b) {
+      return a.yearBuilt - b.yearBuilt; // ascending: most negative (oldest BCE) first
+    });
+  }
+
+  return sorted;
 }
 
-.header-sub {
-  font-family: 'Source Serif 4', serif;
-  font-size: 1rem;
-  font-style: italic;
-  color: var(--text-muted);
+// ============================================================
+// FEATURE 3 — SEARCH
+// Uses .filter() + .toLowerCase() + .includes() across multiple fields
+// ============================================================
+
+function filterBySearch(data) {
+  var query = currentSearch.toLowerCase().trim();
+  if (!query) return data;
+
+  return data.filter(function(wonder) {
+    return (
+      wonder.name.toLowerCase().includes(query)        ||
+      wonder.location.toLowerCase().includes(query)    ||
+      wonder.continent.toLowerCase().includes(query)   ||
+      wonder.type.toLowerCase().includes(query)        ||
+      wonder.description.toLowerCase().includes(query)
+    );
+  });
 }
 
-/* ════════════════════════════════════════
-   CONTROLS BAR
-════════════════════════════════════════ */
-.controls {
-  background: var(--surface);
-  border-bottom: 2px solid var(--border);
-  padding: 1.4rem 2rem 1.2rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.4rem 2.8rem;
-  align-items: flex-end;
-  position: sticky;
-  top: 0;
-  z-index: 50;
+// ============================================================
+// FEATURE 4 — UNESCO TOGGLE
+// Uses .filter() to keep only wonders where isUNESCO === true
+// ============================================================
+
+function filterByUNESCO(data) {
+  if (!unescoOnly) return data;
+  return data.filter(function(wonder) {
+    return wonder.isUNESCO === true;
+  });
 }
 
-.control-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
+// ============================================================
+// CARD BUILDER
+// Takes one wonder object, returns an HTML string
+// ============================================================
+
+function buildCard(wonder) {
+  // UNESCO badge only renders if isUNESCO is true
+  var unescoHTML = wonder.isUNESCO
+    ? '<span class="unesco-badge">🏆 UNESCO</span>'
+    : '';
+
+  return (
+    '<div class="card era-' + getEra(wonder.yearBuilt) + '">' +
+      '<div class="card-emoji">' + wonder.emoji + '</div>' +
+      '<div class="card-header">' +
+        '<span class="type-tag">' + wonder.type + '</span>' +
+        unescoHTML +
+      '</div>' +
+      '<h2 class="card-title">' + wonder.name + '</h2>' +
+      '<p class="card-location">📍 ' + wonder.location + ' &nbsp;·&nbsp; ' + wonder.continent + '</p>' +
+      '<p class="card-desc">' + wonder.description + '</p>' +
+      '<div class="card-quick-fact">' +
+        '<strong>✦ Quick Fact:</strong> ' + wonder.quickFact +
+      '</div>' +
+      '<div class="card-stats">' +
+        '<div class="stat">' +
+          '<span class="stat-label">Built / Formed</span>' +
+          '<span class="stat-value">' + formatYear(wonder.yearBuilt) + '</span>' +
+        '</div>' +
+        '<div class="stat">' +
+          '<span class="stat-label">Visitors / Year</span>' +
+          '<span class="stat-value">' + formatVisitors(wonder.visitorCount) + '</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>'
+  );
 }
 
-.control-group--wide {
-  flex: 1;
-  min-width: 200px;
-  max-width: 280px;
+// ============================================================
+// RENDER — chains all four operations, then draws the grid
+// ============================================================
+
+function renderCards() {
+  var results = filterBySearch(wonderCatalog);  // Feature 3
+  results     = filterByEra(results);           // Feature 1
+  results     = filterByUNESCO(results);        // Feature 4
+  results     = sortWonders(results);           // Feature 2
+
+  var container = document.getElementById("cards-container");
+  var counter   = document.getElementById("result-count");
+
+  if (results.length === 0) {
+    container.innerHTML = '<p class="no-results">No wonders match that search. Try a different filter or keyword!</p>';
+  } else {
+    container.innerHTML = results.map(buildCard).join("");
+  }
+
+  counter.textContent = "Showing " + results.length + " of " + wonderCatalog.length + " wonders";
 }
 
-.control-group--toggle {
-  justify-content: flex-end;
-}
+// ============================================================
+// EVENT LISTENERS
+// ============================================================
 
-.control-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
+// Feature 3: Search — fires on every keystroke
+document.getElementById("search-input").addEventListener("input", function(e) {
+  currentSearch = e.target.value;
+  renderCards();
+});
 
-/* Search */
-.search-wrap {
-  position: relative;
-}
+// Feature 1: Era filter buttons
+document.querySelectorAll(".era-btn").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll(".era-btn").forEach(function(b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    currentEra = btn.dataset.era;
+    renderCards();
+  });
+});
 
-.search-input {
-  width: 100%;
-  background: var(--card-bg);
-  border: 1.5px solid var(--border);
-  border-radius: 4px;
-  color: var(--text);
-  font-family: 'Source Serif 4', serif;
-  font-size: 0.95rem;
-  padding: 0.5rem 0.8rem 0.5rem 2.2rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
+// Feature 2: Sort buttons
+document.querySelectorAll(".sort-btn").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll(".sort-btn").forEach(function(b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    currentSort = btn.dataset.sort;
+    renderCards();
+  });
+});
 
-.search-input::placeholder { color: var(--text-dim); font-style: italic; }
-.search-input:focus { border-color: var(--gold); }
+// Feature 4: UNESCO toggle
+document.getElementById("unesco-toggle").addEventListener("change", function(e) {
+  unescoOnly = e.target.checked;
+  renderCards();
+});
 
-.search-icon {
-  position: absolute;
-  left: 0.65rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-  color: var(--text-dim);
-  pointer-events: none;
-  line-height: 1;
-}
-
-/* Filter & Sort buttons */
-.btn-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.era-btn,
-.sort-btn {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.68rem;
-  letter-spacing: 0.04em;
-  padding: 0.42rem 0.85rem;
-  background: transparent;
-  border: 1.5px solid var(--border);
-  border-radius: 3px;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
-  line-height: 1.4;
-}
-
-.era-btn small {
-  display: block;
-  font-size: 0.56rem;
-  opacity: 0.6;
-  margin-top: 0.05rem;
-}
-
-.era-btn:hover,
-.sort-btn:hover {
-  border-color: var(--gold-dim);
-  color: var(--text);
-}
-
-.era-btn.active,
-.sort-btn.active {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: #0f0e0c;
-  font-weight: 500;
-}
-
-/* UNESCO toggle */
-.toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  cursor: pointer;
-  user-select: none;
-}
-
-.toggle input { display: none; }
-
-.toggle-track {
-  width: 40px;
-  height: 22px;
-  background: var(--card-bg);
-  border: 1.5px solid var(--border);
-  border-radius: 11px;
-  position: relative;
-  flex-shrink: 0;
-  transition: background 0.25s, border-color 0.25s;
-}
-
-.toggle-thumb {
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  background: var(--text-dim);
-  border-radius: 50%;
-  top: 2.5px;
-  left: 2.5px;
-  transition: transform 0.25s, background 0.25s;
-}
-
-.toggle input:checked ~ .toggle-track {
-  background: var(--gold);
-  border-color: var(--gold);
-}
-
-.toggle input:checked ~ .toggle-track .toggle-thumb {
-  transform: translateX(18px);
-  background: #0f0e0c;
-}
-
-.toggle-text {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  letter-spacing: 0.03em;
-}
-
-/* Result count */
-.result-count {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  color: var(--text-dim);
-  align-self: center;
-  margin-left: auto;
-  white-space: nowrap;
-}
-
-/* ════════════════════════════════════════
-   CARD GRID
-════════════════════════════════════════ */
-main {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  max-width: 1320px;
-  margin: 2.5rem auto;
-  padding: 0 2rem 4rem;
-}
-
-/* ════════════════════════════════════════
-   CARD
-════════════════════════════════════════ */
-.card {
-  background: var(--card-bg);
-  border: 1.5px solid var(--border);
-  border-radius: 6px;
-  padding: 1.4rem 1.4rem 1.2rem;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-  animation: fade-up 0.35s ease both;
-}
-
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  border-color: var(--gold-dim);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.5);
-}
-
-/* Left accent stripe by era */
-.card.era-ancient { border-left: 4px solid var(--red); }
-.card.era-medieval { border-left: 4px solid var(--gold); }
-.card.era-modern  { border-left: 4px solid var(--blue); }
-.card.era-natural { border-left: 4px solid var(--teal); }
-
-/* Emoji watermark */
-.card-emoji {
-  position: absolute;
-  top: 0.8rem;
-  right: 1rem;
-  font-size: 3rem;
-  opacity: 0.07;
-  pointer-events: none;
-  user-select: none;
-  transform: rotate(10deg);
-  line-height: 1;
-}
-
-/* Header row: type + UNESCO */
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.7rem;
-}
-
-.type-tag {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 0.15rem 0.5rem;
-}
-
-.unesco-badge {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.06em;
-  color: var(--gold);
-  background: rgba(212,168,67,0.12);
-  border: 1px solid var(--gold-dim);
-  border-radius: 2px;
-  padding: 0.15rem 0.5rem;
-}
-
-/* Title */
-.card-title {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--text);
-  margin-bottom: 0.3rem;
-}
-
-/* Location */
-.card-location {
-  font-family: 'Source Serif 4', serif;
-  font-size: 0.88rem;
-  font-style: italic;
-  color: var(--text-muted);
-  margin-bottom: 0.85rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border);
-}
-
-/* Description */
-.card-desc {
-  font-family: 'Source Serif 4', serif;
-  font-size: 0.92rem;
-  line-height: 1.65;
-  color: #b8af9a;
-  margin-bottom: 0.9rem;
-}
-
-/* Quick fact */
-.card-quick-fact {
-  background: var(--surface);
-  border-left: 3px solid var(--gold);
-  padding: 0.65rem 0.85rem;
-  margin-bottom: 0.9rem;
-  font-family: 'Source Serif 4', serif;
-  font-size: 0.88rem;
-  font-style: italic;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
-.card-quick-fact strong {
-  font-style: normal;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.58rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gold);
-  display: block;
-  margin-bottom: 0.3rem;
-}
-
-/* Stats */
-.card-stats {
-  display: flex;
-  gap: 1.5rem;
-  border-top: 1px solid var(--border);
-  padding-top: 0.85rem;
-}
-
-.stat { display: flex; flex-direction: column; gap: 0.2rem; }
-
-.stat-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-
-.stat-value {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.9rem;
-  color: var(--text);
-}
-
-/* ── No results ── */
-.no-results {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 5rem 2rem;
-  font-family: 'Source Serif 4', serif;
-  font-style: italic;
-  font-size: 1.1rem;
-  color: var(--text-dim);
-}
-
-/* ── Footer ── */
-footer {
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  text-align: center;
-  padding: 2rem;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.06em;
-  color: var(--text-dim);
-}
-
-footer p + p { margin-top: 0.4rem; }
-.footer-sub { opacity: 0.5; }
-
-/* ── Responsive ── */
-@media (max-width: 700px) {
-  header { padding: 2rem 1.2rem 1.8rem; }
-  .controls { padding: 1rem 1.2rem; gap: 1rem 1.5rem; position: static; }
-  .control-group--wide { min-width: 100%; max-width: 100%; }
-  .result-count { margin-left: 0; width: 100%; }
-  main { grid-template-columns: 1fr; padding: 0 1rem 3rem; }
-}
+// ============================================================
+// INIT
+// ============================================================
+renderCards();
