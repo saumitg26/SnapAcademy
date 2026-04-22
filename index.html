@@ -1,31 +1,87 @@
-<!doctype html>
-<html>
-  <head>
-    <title>LA TV Shows | Home</title>
-    <meta name="description" content="A Catalog of Shows Set in Los Angeles" />
-    <link rel="stylesheet" href="style.css" />
-    <script type="text/javascript" src="scripts.js"></script>
-  </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Worldwide Wonders</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Unbounded: chunky, geographic, modern display -->
+  <!-- Source Serif 4: editorial body font with real personality -->
+  <!-- IBM Plex Mono: clean data/label mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
 
-  <body>
-    <header class="main-header">
-      <h1 class="title">LA TV Shows</h1>
-    </header>
-    <div id="card-container"></div>
-    <div class="card" style="display: none">
-      <div class="card-content">
-        <h2>TV Show Title</h2>
-        <img src="" alt="TV Show Poster" />
-        <ul>
-          <li>Bullet Point 1</li>
-          <li>Bullet Point 2</li>
-          <li>Bullet Point 3</li>
-        </ul>
+  <header>
+    <p class="header-eyebrow">&#9670; Est. Since the Dawn of Civilization &#9670;</p>
+    <h1>Worldwide<br>Wonders</h1>
+    <p class="header-sub">A catalog of 20 of Earth's most remarkable places</p>
+  </header>
+
+  <section class="controls">
+
+    <!-- Search -->
+    <div class="control-group control-group--wide">
+      <p class="control-label">Search</p>
+      <div class="search-wrap">
+        <input
+          type="text"
+          id="search-input"
+          class="search-input"
+          placeholder="Try: Egypt, Natural, Ancient…"
+          autocomplete="off"
+        />
+        <span class="search-icon">&#9906;</span>
       </div>
     </div>
-    <div class="footer">
-      <button onclick="quoteAlert()">Get A Quote!</button>
-      <button onclick="removeLastCard()">Remove A Card!</button>
+
+    <!-- FEATURE 1: Era Filter -->
+    <div class="control-group">
+      <p class="control-label">Filter by Era</p>
+      <div class="btn-row">
+        <button class="era-btn active" data-era="all">All Eras</button>
+        <button class="era-btn" data-era="ancient">Ancient<small>Pre-1000 AD</small></button>
+        <button class="era-btn" data-era="medieval">Medieval<small>1000–1800</small></button>
+        <button class="era-btn" data-era="modern">Modern<small>1800–Now</small></button>
+        <button class="era-btn" data-era="natural">Natural<small>Timeless</small></button>
+      </div>
     </div>
-  </body>
+
+    <!-- FEATURE 2: Sort -->
+    <div class="control-group">
+      <p class="control-label">Sort By</p>
+      <div class="btn-row">
+        <button class="sort-btn active" data-sort="name">Name A–Z</button>
+        <button class="sort-btn" data-sort="visitors">Most Visited</button>
+        <button class="sort-btn" data-sort="oldest">Oldest First</button>
+      </div>
+    </div>
+
+    <!-- UNESCO toggle -->
+    <div class="control-group control-group--toggle">
+      <p class="control-label">UNESCO Only</p>
+      <label class="toggle">
+        <input type="checkbox" id="unesco-toggle" />
+        <span class="toggle-track">
+          <span class="toggle-thumb"></span>
+        </span>
+        <span class="toggle-text">Show UNESCO sites</span>
+      </label>
+    </div>
+
+    <p id="result-count" class="result-count"></p>
+
+  </section>
+
+  <!-- CATALOG GRID -->
+  <main id="cards-container"></main>
+
+  <footer>
+    <p>Worldwide Wonders &mdash; SEA Stage 2 Data Catalog Project</p>
+    <p class="footer-sub">Visitor counts are annual estimates &nbsp;&#183;&nbsp; BCE dates stored as negative numbers</p>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
 </html>
